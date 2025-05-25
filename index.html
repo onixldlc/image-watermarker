@@ -1,0 +1,172 @@
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      html {
+        background-color: var(--background-color);
+        color: var(--primary-text-color);
+      }
+      body{
+        padding: 0;
+      }
+
+
+
+      #watermark-input-form {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      #image-preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 450px;
+        background-color: var(--secondary-color);
+        border-radius: 15px;
+        border: solid #687787;
+      }
+
+
+
+      .watermark-input-container-left {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 50%;
+      }
+      .watermark-input-container-right {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 50%;
+      }
+
+
+
+      .watermark-input{
+        display: flex;
+        flex-direction: column;
+        background-color: var(--primary-color);
+        padding: 10px;
+        border-radius: 15px;
+      }
+      .watermark-input label {
+        font-weight: bold;
+        padding-bottom: 7px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        cursor:text;
+      }
+
+
+
+      .watermark-input-svg {
+        height: 100%;
+      }
+      #watermark-text-svg {
+        height: 100%;
+      }
+      #watermark-text-img {
+        padding-bottom: 10px;
+      }
+
+
+      
+      input[type="text"], textarea {
+        border-radius: 15px;
+        background-color: var(--secondary-color);
+        border: solid #687787;
+        color: var(--primary-text-color);
+        padding: 3px 8px;
+      }
+
+
+
+      #result-container{
+        display: flex;
+        background-color: var(--primary-color);
+        height: 90%;
+        border-radius: 15px;
+      }
+
+
+
+      :root {
+        --background-color: #181C14;
+        --primary-color: #3C3D37;
+        --secondary-color: #242422;
+        --primary-text-color: #bbbbbb;
+        --secondary-text-color: #697565;
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <form id="watermark-input-form">
+    
+      <div class="watermark-input-container-left">
+        <div class="watermark-input">
+          <label>Watermark Text</label>
+          <input id="watermark-text" type="text" value="watermark">
+        </div>
+
+        <div class="watermark-input watermark-input-img">
+          
+          <div style="display: flex; flex-direction: column;">
+            <label>Image</label>
+            <input id="watermark-text-img" type="file" value="watermark">
+          </div>
+
+          <div id="image-preview">
+            <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="120" fill="#EFF1F300"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M33.2503 38.4816C33.2603 37.0472 34.4199 35.8864 35.8543 35.875H83.1463C84.5848 35.875 85.7503 37.0431 85.7503 38.4816V80.5184C85.7403 81.9528 84.5807 83.1136 83.1463 83.125H35.8543C34.4158 83.1236 33.2503 81.957 33.2503 80.5184V38.4816ZM80.5006 41.1251H38.5006V77.8751L62.8921 53.4783C63.9172 52.4536 65.5788 52.4536 66.6039 53.4783L80.5006 67.4013V41.1251ZM43.75 51.6249C43.75 54.5244 46.1005 56.8749 49 56.8749C51.8995 56.8749 54.25 54.5244 54.25 51.6249C54.25 48.7254 51.8995 46.3749 49 46.3749C46.1005 46.3749 43.75 48.7254 43.75 51.6249Z" fill="#687787"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="watermark-input-container-right">
+        <div class="watermark-input watermark-input-svg">
+          <label for="watermark-text-svg">Watermark SVG</label>
+          <textarea id="watermark-text-svg">The cat was playing in the garden.</textarea>
+        </div>
+      </div>
+    
+    </form>
+
+    <div id="result-container"></div>
+
+    <script>
+      var svg_input = document.getElementById('watermark-text-svg')
+      svg_input.value = [
+        `<svg id="diagtext"`,
+        `  xmlns="http://www.w3.org/2000/svg"`,
+        `  xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%">`,
+        `  <style type="text/css">`,
+        `      text { fill: gray; font-family: Avenir, Arial, Helvetica, sans-serif; }`,
+        `    </style>`,
+        `  <defs>`,
+        `    <pattern id="twitterhandle" patternUnits="userSpaceOnUse" width="400" height="200">`,
+        `      <text y="30" font-size="40" id="name">EXAMPLE</text>`,
+        `    </pattern>`,
+        `    <pattern xlink:href="#twitterhandle">`,
+        `      <text y="120" x="200" font-size="30" id="occupation">EXAMPLE</text>`,
+        `    </pattern>`,
+        `    <pattern id="combo" xlink:href="#twitterhandle" patternTransform="rotate(-45)">`,
+        `      <use xlink:href="#name" />`,
+        `      <use xlink:href="#occupation" />`,
+        `    </pattern>`,
+        `  </defs>`,
+        `  <rect width="100%" height="100%" fill="url(#combo)" />`,
+        `</svg>`].join('\n');
+    </script>
+  </body>
+</html>
