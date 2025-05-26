@@ -11,6 +11,9 @@
       body{
         padding: 0;
       }
+      p {
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
 
 
 
@@ -29,6 +32,36 @@
         background-color: var(--secondary-color);
         border-radius: 15px;
         border: solid #687787;
+        position: relative;
+        padding: 5px;
+      }
+      #result-preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--secondary-color);
+        border-radius: 15px;
+        border: solid #687787;
+        position: relative;
+        height: 600px;
+        padding: 5px;
+      }
+      .preview-text{
+        position: absolute;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #aecae8;
+        opacity: 0.5;
+        text-align: center;
+        align-content: center;
+        pointer-events: none;
+        transition-duration: 500ms;
+        transition-timing-function: ease;
+      }
+      #result-title{
+        font-weight: bold;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-bottom: 7px;
       }
 
 
@@ -75,7 +108,7 @@
       }
 
 
-      
+
       input[type="text"], textarea {
         border-radius: 15px;
         background-color: var(--secondary-color);
@@ -89,8 +122,9 @@
       #result-container{
         display: flex;
         background-color: var(--primary-color);
-        height: 90%;
         border-radius: 15px;
+        padding: 10px;
+        flex-direction: column;
       }
 
 
@@ -124,10 +158,13 @@
           </div>
 
           <div id="image-preview">
-            <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="120" height="120" fill="#EFF1F300"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M33.2503 38.4816C33.2603 37.0472 34.4199 35.8864 35.8543 35.875H83.1463C84.5848 35.875 85.7503 37.0431 85.7503 38.4816V80.5184C85.7403 81.9528 84.5807 83.1136 83.1463 83.125H35.8543C34.4158 83.1236 33.2503 81.957 33.2503 80.5184V38.4816ZM80.5006 41.1251H38.5006V77.8751L62.8921 53.4783C63.9172 52.4536 65.5788 52.4536 66.6039 53.4783L80.5006 67.4013V41.1251ZM43.75 51.6249C43.75 54.5244 46.1005 56.8749 49 56.8749C51.8995 56.8749 54.25 54.5244 54.25 51.6249C54.25 48.7254 51.8995 46.3749 49 46.3749C46.1005 46.3749 43.75 48.7254 43.75 51.6249Z" fill="#687787"/>
-            </svg>
+            <div style="height: 100%;width: 100%;">
+              <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="120" height="120" fill="#EFF1F300"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M33.2503 38.4816C33.2603 37.0472 34.4199 35.8864 35.8543 35.875H83.1463C84.5848 35.875 85.7503 37.0431 85.7503 38.4816V80.5184C85.7403 81.9528 84.5807 83.1136 83.1463 83.125H35.8543C34.4158 83.1236 33.2503 81.957 33.2503 80.5184V38.4816ZM80.5006 41.1251H38.5006V77.8751L62.8921 53.4783C63.9172 52.4536 65.5788 52.4536 66.6039 53.4783L80.5006 67.4013V41.1251ZM43.75 51.6249C43.75 54.5244 46.1005 56.8749 49 56.8749C51.8995 56.8749 54.25 54.5244 54.25 51.6249C54.25 48.7254 51.8995 46.3749 49 46.3749C46.1005 46.3749 43.75 48.7254 43.75 51.6249Z" fill="#687787"/>
+              </svg>
+            </div>
+            <p class="preview-text" style="bottom: 22px;top: 278px">Image Preview</p>
           </div>
 
         </div>
@@ -142,11 +179,25 @@
     
     </form>
 
-    <div id="result-container"></div>
+    <div id="result-container">
+      <div id="result-title">
+        image-preview
+      </div>
+      <div id="result-preview">
+        <div style="height: 100%;width: 100%;">
+          <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="120" fill="#EFF1F300"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M33.2503 38.4816C33.2603 37.0472 34.4199 35.8864 35.8543 35.875H83.1463C84.5848 35.875 85.7503 37.0431 85.7503 38.4816V80.5184C85.7403 81.9528 84.5807 83.1136 83.1463 83.125H35.8543C34.4158 83.1236 33.2503 81.957 33.2503 80.5184V38.4816ZM80.5006 41.1251H38.5006V77.8751L62.8921 53.4783C63.9172 52.4536 65.5788 52.4536 66.6039 53.4783L80.5006 67.4013V41.1251ZM43.75 51.6249C43.75 54.5244 46.1005 56.8749 49 56.8749C51.8995 56.8749 54.25 54.5244 54.25 51.6249C54.25 48.7254 51.8995 46.3749 49 46.3749C46.1005 46.3749 43.75 48.7254 43.75 51.6249Z" fill="#687787"/>
+          </svg>
+        </div>
+        <p class="preview-text" style="bottom: 69px">Result Preview</p>
+      </div>
+    </div>
 
     <script>
+      // default values
       var svg_input = document.getElementById('watermark-text-svg')
-      svg_input.value = [
+      var default_svg = [
         `<svg id="diagtext"`,
         `  xmlns="http://www.w3.org/2000/svg"`,
         `  xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%">`,
@@ -167,6 +218,50 @@
         `  </defs>`,
         `  <rect width="100%" height="100%" fill="url(#combo)" />`,
         `</svg>`].join('\n');
+      svg_input.value = default_svg
     </script>
+
+    <script>
+      // functions
+      var watermarker = {}
+      watermarker.isFirstTimeImageLoad = true;
+
+      watermarker.generateWatermark = function(){
+        var input_svg = document.getElementById('watermark-text-svg').value
+        var input_watermark = document.getElementById('watermark-text').value
+        var input_image = document.getElementById('watermark-text-img').files[0]
+      }
+      watermarker.imageHandler = function(e){
+        var file = e.target.files[0];
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var imagePreview = document.getElementById('image-preview');
+            imagePreview.innerHTML = `<img src="${event.target.result}" alt="Image Preview" style="max-height: 100%; max-width: 100%; object-fit: cover; padding: 10px">`;
+            if (watermarker.isFirstTimeImageLoad) {
+              watermarker.isFirstTimeImageLoad = false;
+              imagePreview.innerHTML += '<p class="preview-text" style="bottom: 22px;top: 278px">Image Preview</p>'
+              setTimeout(function() {
+                imagePreview.children[1].style.bottom = `0`;
+                imagePreview.children[1].style.top = `0`;
+              }, 0);
+            }else{
+              imagePreview.innerHTML += '<p class="preview-text" style="bottom: 0;top: 0">Image Preview</p>'
+            }
+          };
+          reader.readAsDataURL(file);
+        } else {
+          console.log("No file selected");
+        }
+      }
+    </script>
+
+    <script>
+      // event listeners
+      document.getElementById('watermark-text-img').addEventListener('change', watermarker.imageHandler);
+      // document.getElementById('watermark-text-svg').addEventListener('input', watermarker.generateWatermark);
+      // document.getElementById('watermark-text').addEventListener('input', watermarker.generateWatermark);
+    </script>
+
   </body>
 </html>
