@@ -3,6 +3,9 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
     <style>
       html {
         background-color: var(--background-color);
@@ -296,23 +299,30 @@
       watermarker.saveState = function(){
         var input_svg = document.getElementById('watermark-text-svg').value
         var input_watermark = document.getElementById('watermark-text').value
+        var option_override_svg = document.getElementById('watermark-text-img-checkbox').checked
         localStorage.setItem('watermark_svg', input_svg);
         localStorage.setItem('watermark_text', input_watermark);
+        localStorage.setItem('watermark_text_img_checkbox', option_override_svg);
       }
       watermarker.loadState = function(){
         var input_svg = localStorage.getItem('watermark_svg');
         var input_watermark = localStorage.getItem('watermark_text');
+        var option_override_svg = localStorage.getItem('watermark_text_img_checkbox');
         if (input_svg) {
           document.getElementById('watermark-text-svg').value = input_svg;
         }
         if (input_watermark) {
           document.getElementById('watermark-text').value = input_watermark;
         }
+        if (option_override_svg){
+          document.getElementById('watermark-text-img-checkbox').checked = (option_override_svg === 'true');
+        }
       }
       watermarker.resetState = function(){
         localStorage.removeItem('watermark_svg');
         localStorage.removeItem('watermark_text');
-        location.reload();
+        localStorage.removeItem('watermark_text_img_checkbox');
+        window.location.reload(true);
       }
 
 
@@ -321,6 +331,14 @@
         var input_svg = document.getElementById('watermark-text-svg').value
         var input_watermark = document.getElementById('watermark-text').value
         var input_image = document.getElementById('watermark-text-img').files[0]
+        if (!input_svg || !input_watermark) {
+          alert('Please fill in both the SVG and watermark text fields.');
+          return;
+        }
+        if (!input_image) {
+          alert('Please select an image to watermark.');
+          return;
+        }
       }
 
 
@@ -348,14 +366,18 @@
           console.log("No file selected");
         }
       }
+
     </script>
 
     <script>
       // event listeners
-      watermarker.loadState();
+      document.addEventListener('DOMContentLoaded', function() {
+        watermarker.loadState();
+      });
       document.getElementById('watermark-text-img').addEventListener('change', watermarker.imageHandler);
       // document.getElementById('watermark-text-svg').addEventListener('input', watermarker.generateWatermark);
       // document.getElementById('watermark-text').addEventListener('input', watermarker.generateWatermark);
+      document.getElementById('watermark-text-img-checkbox').addEventListener('change', watermarker.saveState);
     </script>
 
   </body>
