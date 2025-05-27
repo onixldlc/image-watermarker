@@ -135,6 +135,10 @@
         padding: 10px;
         flex-direction: column;
       }
+      #result-canvas{
+        width: 100%;
+        height: 100%;
+      }
 
 
 
@@ -291,11 +295,13 @@
     </script>
 
     <script>
-      // functions
+      // definition
       var watermarker = {}
       watermarker.isFirstTimeImageLoad = true;
+    </script>
 
-
+    <script>
+      // state handler
       watermarker.saveState = function(){
         var input_svg = document.getElementById('watermark-text-svg').value
         var input_watermark = document.getElementById('watermark-text').value
@@ -324,24 +330,10 @@
         localStorage.removeItem('watermark_text_img_checkbox');
         window.location.reload(true);
       }
+    </script>
 
-
-
-      watermarker.generateWatermark = function(){
-        var input_svg = document.getElementById('watermark-text-svg').value
-        var input_watermark = document.getElementById('watermark-text').value
-        var input_image = document.getElementById('watermark-text-img').files[0]
-        if (!input_svg || !input_watermark) {
-          alert('Please fill in both the SVG and watermark text fields.');
-          return;
-        }
-        if (!input_image) {
-          alert('Please select an image to watermark.');
-          return;
-        }
-      }
-
-
+    <script>
+      // input handler
       watermarker.imageHandler = function(e){
         watermarker.saveState()
         var file = e.target.files[0];
@@ -367,6 +359,51 @@
         }
       }
 
+      watermarker.svgHandler = function(e){
+        watermarker.saveState()
+        var svgInput = document.getElementById('watermark-text-svg');
+        // Validate SVG content
+        var svgContent = svgInput.value.trim();
+        if (!svgContent.startsWith('<svg') || !svgContent.endsWith('</svg>')) {
+          alert('Please enter valid SVG content.');
+          return;
+        }
+        // Update the SVG content in the preview
+
+      }
+    </script>
+
+    <script>
+      // watermark utils
+      // ((w)=>{
+      //   var utils = {
+      //     initGeneration: function(){
+
+      //     }
+      //   }
+      //   w.utils = utils;
+      // })(watermarker)
+    </script>
+
+    <script>
+      // watermark generation
+      watermarker.generateWatermark = function(){
+        var input_svg = document.getElementById('watermark-text-svg').value
+        var input_watermark = document.getElementById('watermark-text').value
+        var input_image = document.getElementById('watermark-text-img').files[0]
+        if (!input_svg || !input_watermark) {
+          alert('Please fill in both the SVG and watermark text fields.');
+          return;
+        }
+        if (!input_image) {
+          alert('Please select an image to watermark.');
+          return;
+        }
+
+        var resultPreview = document.getElementById('result-preview');
+        resultPreview.innerHTML = `<canvas id="result-canvas" width="100%" height="100%"></canvas>`;
+      }
+
     </script>
 
     <script>
@@ -375,8 +412,8 @@
         watermarker.loadState();
       });
       document.getElementById('watermark-text-img').addEventListener('change', watermarker.imageHandler);
-      // document.getElementById('watermark-text-svg').addEventListener('input', watermarker.generateWatermark);
-      // document.getElementById('watermark-text').addEventListener('input', watermarker.generateWatermark);
+      document.getElementById('watermark-text-svg').addEventListener('input', watermarker.saveState);
+      document.getElementById('watermark-text').addEventListener('input', watermarker.saveState);
       document.getElementById('watermark-text-img-checkbox').addEventListener('change', watermarker.saveState);
     </script>
 
