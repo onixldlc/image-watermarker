@@ -136,8 +136,7 @@
         flex-direction: column;
       }
       #result-canvas{
-        width: 100%;
-        height: 100%;
+        position: absolute;
       }
 
 
@@ -264,7 +263,12 @@
           </svg>
         </div>
         <p class="preview-text" style="bottom: 69px">Result Preview</p>
+        <canvas id="result-canvas"></canvas>
       </div>
+    </div>
+
+    <div hidden>
+      <img id="temp-image-store" src="">
     </div>
 
     <script>
@@ -305,9 +309,11 @@
       watermarker.saveState = function(){
         var input_svg = document.getElementById('watermark-text-svg').value
         var input_watermark = document.getElementById('watermark-text').value
+        // var input_image = document.getElementById('watermark-text-img').files[0];
         var option_override_svg = document.getElementById('watermark-text-img-checkbox').checked
         localStorage.setItem('watermark_svg', input_svg);
         localStorage.setItem('watermark_text', input_watermark);
+        // localStorage.setItem('watermark_img', input_image);
         localStorage.setItem('watermark_text_img_checkbox', option_override_svg);
       }
       watermarker.loadState = function(){
@@ -327,6 +333,7 @@
       watermarker.resetState = function(){
         localStorage.removeItem('watermark_svg');
         localStorage.removeItem('watermark_text');
+        localStorage.removeItem('watermark_img');
         localStorage.removeItem('watermark_text_img_checkbox');
         window.location.reload(true);
       }
@@ -335,13 +342,13 @@
     <script>
       // input handler
       watermarker.imageHandler = function(e){
-        watermarker.saveState()
         var file = e.target.files[0];
         if (file) {
           var reader = new FileReader();
           reader.onload = function(event) {
             var imagePreview = document.getElementById('image-preview');
             imagePreview.innerHTML = `<img src="${event.target.result}" alt="Image Preview" style="max-height: 100%; max-width: 100%; object-fit: cover; padding: 10px">`;
+            watermarker.image = event.target.result;
             if (watermarker.isFirstTimeImageLoad) {
               watermarker.isFirstTimeImageLoad = false;
               imagePreview.innerHTML += '<p class="preview-text" style="bottom: 22px;top: 278px">Image Preview</p>'
@@ -354,7 +361,8 @@
             }
           };
           reader.readAsDataURL(file);
-        } else {
+          watermarker.saveState()
+      } else {
           console.log("No file selected");
         }
       }
@@ -388,20 +396,50 @@
     <script>
       // watermark generation
       watermarker.generateWatermark = function(){
+
+        // load everything
         var input_svg = document.getElementById('watermark-text-svg').value
         var input_watermark = document.getElementById('watermark-text').value
-        var input_image = document.getElementById('watermark-text-img').files[0]
+        var input_image = {
+          url: watermarker.image,
+          base: document.getElementById('watermark-text-img').files[0],
+        }
         if (!input_svg || !input_watermark) {
           alert('Please fill in both the SVG and watermark text fields.');
           return;
         }
-        if (!input_image) {
+        if (!input_image.url) {
           alert('Please select an image to watermark.');
           return;
         }
 
+        // define canvas
+        var resultCanvas = document.getElementById('result-canvas');
+        var img = document.getElementById('temp-image-store');
+        var ctx = resultCanvas.getContext('2d');
+
+        // resize canvas to parrent
         var resultPreview = document.getElementById('result-preview');
-        resultPreview.innerHTML = `<canvas id="result-canvas" width="100%" height="100%"></canvas>`;
+        resultCanvas.width = resultPreview.children[0].clientWidth;
+        resultCanvas.height = resultPreview.children[0].clientHeight;
+
+        // convert input_image to an image object
+        img.onload = function() {
+          var hRatio = resultCanvas.width / img.width;
+          var vRatio = resultCanvas.height / img.height;
+          var scale = Math.min(hRatio, vRatio);
+          var finalWidth = (img.width * scale);
+          var finalHeight = (img.height * scale);
+          console.log(`canvas width: ${resultCanvas.width}, canvas height: ${resultCanvas.height}`);
+          console.log(`img.width: ${img.width}, img.height: ${img.height}, rescale: ${scale}`);
+          console.log(`finalWidth: ${finalWidth}, finalHeight: ${finalHeight}`);
+          
+          resultCanvas.width = finalWidth;
+          resultCanvas.height = finalHeight;
+
+          ctx.drawImage(img, 0, 0, finalWidth, finalHeight);
+        }
+        img.src = input_image.url;
       }
 
     </script>
@@ -411,6 +449,7 @@
       document.addEventListener('DOMContentLoaded', function() {
         watermarker.loadState();
       });
+
       document.getElementById('watermark-text-img').addEventListener('change', watermarker.imageHandler);
       document.getElementById('watermark-text-svg').addEventListener('input', watermarker.saveState);
       document.getElementById('watermark-text').addEventListener('input', watermarker.saveState);
