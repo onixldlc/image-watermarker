@@ -383,14 +383,14 @@
 
     <script>
       // watermark utils
-      // ((w)=>{
-      //   var utils = {
-      //     initGeneration: function(){
-
-      //     }
-      //   }
-      //   w.utils = utils;
-      // })(watermarker)
+      ((w)=>{
+        var utils = {
+          downloadWatermarked: function(){
+            
+          }
+        }
+        w.utils = utils;
+      })(watermarker)
     </script>
 
     <script>
@@ -430,6 +430,7 @@
           var scale = Math.min(hRatio, vRatio);
           var finalWidth = (img.width * scale);
           var finalHeight = (img.height * scale);
+
           console.log(`canvas width: ${resultCanvas.width}, canvas height: ${resultCanvas.height}`);
           console.log(`img.width: ${img.width}, img.height: ${img.height}, rescale: ${scale}`);
           console.log(`finalWidth: ${finalWidth}, finalHeight: ${finalHeight}`);
@@ -440,8 +441,16 @@
           ctx.drawImage(img, 0, 0, finalWidth, finalHeight);
         }
         img.src = input_image.url;
-      }
 
+        var svgBlob = new Blob([input_svg], {type: 'image/svg+xml'});
+        var svgUrl = URL.createObjectURL(svgBlob);
+        var svgImage = new Image();
+        svgImage.onload = function() {
+            ctx.drawImage(svgImage, 0, 0, resultCanvas.width, resultCanvas.height);
+            URL.revokeObjectURL(svgUrl);
+        };
+        svgImage.src = svgUrl;
+      }
     </script>
 
     <script>
