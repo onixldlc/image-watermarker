@@ -173,6 +173,23 @@
         color: var(--button-active-red-text);
       }
 
+      .button-download{
+        background-color: var(--button-color-blue);
+        color: var(--button-color-blue-text);
+      }
+      .button-download:hover{
+        background-color: var(--button-hover-blue);
+      }
+      .button-download:active{
+        background-color: var(--button-active-blue);
+        color: var(--button-active-blue-text);
+      }
+      .button-download:disabled{
+        background-color: var(--button-active-blue);
+        color: var(--secondary-color);
+        cursor: not-allowed;
+      }
+
 
 
       :root {
@@ -197,6 +214,13 @@
         --button-color-red-text: #352121;
         --button-hover-red-text: #a25d5d;
         --button-active-red-text: #d87f7f;
+
+        --button-color-blue: #6B8DD0;
+        --button-hover-blue: #5269a0;
+        --button-active-blue: #39476e;
+        --button-color-blue-text: #212135;
+        --button-hover-blue-text: #5d6da2;
+        --button-active-blue-text: #7f9bd8;
       }
 
 
@@ -218,6 +242,7 @@
             <div class="buttons-container">
               <button class="button-controls button-reset" type="button" onclick="watermarker.resetState()">Reset</button>
               <button class="button-controls button-generate" type="button" onclick="watermarker.generateWatermark()">Generate</button>
+              <button class="button-controls button-download" type="button" onclick="watermarker.downloadWatermark()" disabled id="download_button">Download</button>
             </div>
           </div>
         </div>
@@ -382,15 +407,40 @@
     </script>
 
     <script>
-      // watermark utils
-      ((w)=>{
-        var utils = {
-          downloadWatermarked: function(){
+      // // watermark utils
+      // ((w)=>{
+      //   var utils = {
+      //     downloadWatermark: function(){
             
-          }
+      //     }
+      //   }
+      //   w.utils = utils;
+      // })(watermarker)
+    </script>
+
+    <script>
+      // watermark download
+      watermarker.downloadWatermark = function(){
+        var date = new Date();
+        var formattedDate = date.toISOString().replace(/[:.]/g, '-');
+        var resultCanvas = document.getElementById('result-canvas');
+        if (!resultCanvas || !resultCanvas.width || !resultCanvas.height) {
+          alert('Please generate a watermark first.');
+          return;
         }
-        w.utils = utils;
-      })(watermarker)
+
+        // Create a link element
+        var link = document.createElement('a');
+        link.download = `watermark-${formattedDate}.png`;
+        
+        // Convert canvas to data URL
+        link.href = resultCanvas.toDataURL('image/png');
+
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     </script>
 
     <script>
@@ -450,6 +500,9 @@
             URL.revokeObjectURL(svgUrl);
         };
         svgImage.src = svgUrl;
+        if(img.src && svgImage.src){
+          document.getElementById('download_button').disabled = false;
+        }
       }
     </script>
 
