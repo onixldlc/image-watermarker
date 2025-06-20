@@ -232,7 +232,7 @@
     
       <div class="watermark-input-container-left">
         <div class="watermark-input">
-          <label>Watermark Text</label>
+          <label>Watermark Text Replacer</label>
           <input id="watermark-text" type="text" value="watermark">
           <div class="controls-container">
             <div class="options-container">
@@ -450,6 +450,7 @@
         // load everything
         var input_svg = document.getElementById('watermark-text-svg').value
         var input_watermark = document.getElementById('watermark-text').value
+        var input_text_override_check = document.getElementById('watermark-text-img-checkbox').checked;
         var input_image = {
           url: watermarker.image,
           base: document.getElementById('watermark-text-img').files[0],
@@ -492,9 +493,28 @@
         }
         img.src = input_image.url;
 
+        // modify input_svg if input_text_override_check is true
+        if(input_text_override_check){
+          var parser = new DOMParser();
+          var svgDoc = parser.parseFromString(input_svg, 'image/svg+xml');
+
+          //  before modifying the SVG, check if svgDoc is valid
+          if (svgDoc.querySelector('parsererror')) {
+            alert('Invalid SVG content. Please check your SVG input.');
+            return;
+          }
+          var textElements = svgDoc.querySelectorAll('text');
+          textElements.forEach(function(textElement) {
+            textElement.textContent = input_watermark;
+          });
+          input_svg = new XMLSerializer().serializeToString(svgDoc);
+        }
+
+        // convert input_svg to an image object
         var svgBlob = new Blob([input_svg], {type: 'image/svg+xml'});
         var svgUrl = URL.createObjectURL(svgBlob);
         var svgImage = new Image();
+
         svgImage.onload = function() {
             ctx.drawImage(svgImage, 0, 0, resultCanvas.width, resultCanvas.height);
             URL.revokeObjectURL(svgUrl);
